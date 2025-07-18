@@ -10,10 +10,14 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 // Crash immediately if MongoDB URI is missing
 if (!MONGODB_URI) {
-  console.error("ERROR: MONGODB_URI environment variable is required!");
-  process.exit(1);
+  console.warn("Running in memory-only mode (no database)");
+  // Create mock database functions
+  const mockDB = {
+    find: () => Promise.resolve([]),
+    create: () => Promise.resolve({}),
+  };
+  module.exports = { Message: mockDB };
 }
-
 // MongoDB connection with retries
 const connectWithRetry = () => {
   mongoose.connect(MONGODB_URI)
