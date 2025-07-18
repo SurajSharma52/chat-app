@@ -4,21 +4,6 @@ const socketIo = require("socket.io");
 const path = require("path");
 const mongoose = require("mongoose");
 
-// Configuration - uses Render environment variables
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://surajsharma97336:JpyjEs522ewfeVJ3@chatapp.nkfy6z9.mongodb.net/?retryWrites=true&w=majority&appName=chatapp";
-const PORT = process.env.PORT || 3000;
-
-// Initialize MongoDB connection
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("✅ Connected to MongoDB"))
-.catch(err => {
-  console.error("❌ MongoDB connection error:", err);
-  process.exit(1); // Exit if DB connection fails
-});
-
 // Message Schema
 const messageSchema = new mongoose.Schema({
   sender: String,
