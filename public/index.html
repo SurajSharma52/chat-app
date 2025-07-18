@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <title>Secure Friends Chat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Login screen -->
+  <div id="loginScreen">
+    <h2>Enter Chat</h2>
+    <form onsubmit="enterChat(); return false;">
+      <input type="text" id="nameInput" placeholder="Enter your name" required>
+      <input type="password" id="passwordInput" placeholder="Enter chat password" required>
+      <button type="submit">Join</button>
+      <p id="errorMsg" class="error"></p>
+    </form>
+  </div>
+
+  <!-- Chat screen -->
+  <div id="chatScreen" style="display: none;">
+    <h2>Friends Chat</h2>
+    <div class="messages-container" id="messages"></div>
+    <div id="chatInputContainer">
+      <form onsubmit="sendMessage(); return false;">
+        <input id="messageInput" type="text" placeholder="Type a message...">
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
