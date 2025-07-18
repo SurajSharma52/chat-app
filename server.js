@@ -4,6 +4,23 @@ const socketIo = require("socket.io");
 const path = require("path");
 const mongoose = require("mongoose");
 
+// --- Critical Fixes Start ---
+const PORT = process.env.PORT || 3000; // Fallback port
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/chatdb"; // Fallback local DB
+
+if (!MONGODB_URI) {
+  console.error("ERROR: MONGODB_URI environment variable is missing!");
+  process.exit(1);
+}
+
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch(err => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1); // Crash app if DB fails
+  });
+// --- Critical Fixes End ---
+
 // Message Schema
 const messageSchema = new mongoose.Schema({
   sender: String,
@@ -22,12 +39,14 @@ const io = socketIo(server);
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
 
-// Predefined users (move to DB in production)
-const users = {
-  user1: "pass123",
-  user2: "hello456", 
-  friend: "chat789"
-};
+// Predefined users (minimal change: added fallback empty object)
+const users = process.env.PRELOADED_USERS 
+  ? JSON.parse(process.env.PRELOADED_USERS) 
+  : { 
+      user1: "pass123",
+      user2: "hello456",
+      friend: "chat789"
+    };
 
 // Active connections
 const connectedUsers = {};
@@ -110,5 +129,5 @@ io.on("connection", (socket) => {
 // Start server
 server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`Using MongoDB URI: ${MONGODB_URI.substring(0, 30)}...`); // Log partial URI
+  console.log(`Using MongoDB URI: ${MONGODB_URI.substring(0, 25)}...`); // Log partial URI
 });
